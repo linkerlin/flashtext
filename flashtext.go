@@ -10,7 +10,7 @@ type keywordProcessor struct {
 	// dicts store the keyword => cleanName
 	dicts map[string]string
 	// keytrie is the trie struct
-	keytrie *trie
+	keytrie *bytetrie
 	// caseSensitive or not
 	caseSensitive bool
 	// noboundaryWords default to a-zA-Z0-9_
@@ -42,7 +42,7 @@ func NewKeywordProcessor() *keywordProcessor {
 	p := &keywordProcessor{
 		dicts:           make(map[string]string),
 		noboundaryWords: make(map[rune]bool),
-		keytrie:         NewTrie('r'),
+		keytrie:         NewByteTrie('r'),
 	}
 	for i := 0; i < 26; i++ {
 		p.AddNoBoundaryWords(rune('a' + i))
@@ -95,7 +95,7 @@ func (p *keywordProcessor) ExtractKeywords(sentence string, option ...*Option) (
 	size := len(runes)
 	idx := 0
 	begin := true
-	var curTrie *trie
+	var curTrie *bytetrie
 	for idx < size {
 		curTrie = p.keytrie
 		c := runes[idx]
